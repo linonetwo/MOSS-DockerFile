@@ -56,9 +56,9 @@ docker build -t moss . -f ./moss-int4-cuda117.dockerfile
 
 ## Screenshots
 
-![images\webui-demo.jpg](images\webui-demo.jpg)
+![images/webui-demo.jpg](./images/webui-demo.jpg)
 
-![images\resource-usage.jpg](images\resource-usage.jpg)
+![images/resource-usage.jpg](./images/resource-usage.jpg)
 
 ## FAQ
 
