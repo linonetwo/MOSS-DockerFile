@@ -14,12 +14,12 @@ Windows 上 docker 运行环境搭建参考[2022 最新 Docker 和 WSL2 ，炼�
 
 ### 下载模型
 
-参考 https://huggingface.co/fnlp/moss-moon-003-sft-plugin-int4
+参考 https://huggingface.co/fnlp/moss-moon-003-sft-int4
 
 ```sh
 # Make sure you have git-lfs installed (https://git-lfs.com)
 git lfs install
-git clone https://huggingface.co/fnlp/moss-moon-003-sft-plugin-int4
+git clone https://huggingface.co/fnlp/moss-moon-003-sft-int4
 
 # if you want to clone without large files – just their pointers
 # prepend your git clone with the following env var:
@@ -28,7 +28,7 @@ GIT_LFS_SKIP_SMUDGE=1
 
 我个人是先带上 `GIT_LFS_SKIP_SMUDGE=1` 去 `git clone`，来下载 `config.json` 等文件。然后单独用浏览器下载 10GB 的 `pytorch_model.bin` 文件，会比较快。
 
-之后需要将这个 `moss-moon-003-sft-plugin-int4` 文件夹作为 Volume 挂载到 docker 的 `/mnt/llm` 文件夹上。
+之后需要将这个 `moss-moon-003-sft-int4` 文件夹作为 Volume 挂载到 docker 的 `/mnt/llm` 文件夹上。
 
 ### 运行 docker
 

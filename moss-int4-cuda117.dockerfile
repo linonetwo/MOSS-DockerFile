@@ -25,28 +25,24 @@ RUN apt-get update --fix-missing && apt-get -y --no-install-recommends install  
     openssh-server htop \
     python3.10 python3-pip python3-dev
 
+ENV GIT_LFS_SKIP_SMUDGE=1
+RUN git clone https://huggingface.co/fnlp/moss-moon-003-sft-int4 --filter=blob:none --depth=1
 RUN git clone https://github.com/OpenLMLab/MOSS.git --filter=blob:none --depth=1
-RUN cd MOSS
 
 WORKDIR $CODEDIR/MOSS
 
 # install python packages
 # fix ERROR: Could not find a version that satisfies the requirement torch==1.10.1 (from versions: 1.11.0, 1.12.0, 1.12.1, 1.13.0, 1.13.0+cu117, 1.13.1, 1.13.1+cu117, 2.0.0, 2.0.0+cu117)
-RUN sed -i 's/torch==1.10.1/torch==1.13.1+cu117/' requirements.txt
+# RUN sed -i 's/torch==1.10.1/torch==1.13.1+cu117/' requirements.txt
 RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --extra-index-url https://download.pytorch.org/whl/cu117 -r requirements.txt
 
 WORKDIR $CODEDIR
-ENV GIT_LFS_SKIP_SMUDGE=1
-RUN git clone https://huggingface.co/fnlp/moss-moon-003-sft-plugin-int4 --filter=blob:none --depth=1
-# fix name 'autotune' is not defined
-RUN mkdir -p /root/.cache/huggingface/modules/transformers_modules/local/ && cp $CODEDIR/moss-moon-003-sft-plugin-int4/custom_autotune.py /root/.cache/huggingface/modules/transformers_modules/local/
+
 LABEL maintainer="LinOnetwo <linonetwo012@gmail.com>"
 
 # Clean up intermediate files to save some space
 RUN apt-get -qy autoremove
 RUN rm -r /opt/nvidia/
-
-RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple mdtex2html triton
 
 WORKDIR $CODEDIR/MOSS
 COPY ./moss_web_demo_gradio.py ./moss_web_demo_gradio.py
@@ -55,7 +51,11 @@ RUN sed -i 's/share=False, inbrowser=True/share=True, inbrowser=True/' moss_web_
 # model is in /mnt/llm/MOSS/moss-moon-003-sft-plugin-int4
 # RUN sed -i 's#fnlp/moss-moon-003-sft#/mnt/llm/MOSS/moss-moon-003-sft-plugin-int4#' moss_web_demo_gradio.py
 
+# fix name 'autotune' is not defined
+# run this in python instead, seems run here is not working
+RUN mkdir -p /root/.cache/huggingface/modules/transformers_modules/local/ && cp $CODEDIR/moss-moon-003-sft-int4/custom_autotune.py /root/.cache/huggingface/modules/transformers_modules/local/
+
 ENTRYPOINT ["/usr/bin/python3"]
-CMD ["moss_web_demo_gradio.py"]
+CMD ["moss_web_demo_gradio.py", "--model_name", "/mnt/llm/MOSS/moss-moon-003-sft-int4"]
 # ENTRYPOINT ["/usr/bin/env"]
 # CMD ["ls", "-al", "/mnt/llm/MOSS/moss-moon-003-sft-plugin-int4"]
