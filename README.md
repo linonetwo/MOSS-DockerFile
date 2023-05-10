@@ -44,7 +44,7 @@ If your model are in different location, change the `--volume=xxx:/mnt/llm` part
 
 In Docker Desktop, it looks like this:
 
-![llm-volume](images\llm-volume.png)
+![llm-volume](images/llm-volume.png)
 
 ## Build
 
